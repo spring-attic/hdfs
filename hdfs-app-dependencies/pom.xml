@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>hdfs-app-dependencies</artifactId>
+    <packaging>pom</packaging>
+    <name>hdfs-app-dependencies</name>
+    <description>Spring Cloud Stream HDFS App Dependencies</description>
+
+    <parent>
+        <groupId>org.springframework.cloud.stream.app</groupId>
+        <artifactId>app-starters-core-dependencies</artifactId>
+        <version>1.1.0.BUILD-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <spring-data-hadoop.version>2.4.0.RELEASE</spring-data-hadoop.version>
+        <snappy-java.version>1.1.2</snappy-java.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud.stream.app</groupId>
+                <artifactId>spring-cloud-starter-stream-sink-hdfs</artifactId>
+                <version>1.1.0.BUILD-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud.stream.app</groupId>
+                <artifactId>spring-cloud-starter-stream-sink-hdfs-dataset</artifactId>
+                <version>1.1.0.BUILD-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-hadoop-boot</artifactId>
+                <version>${spring-data-hadoop.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.mortbay.jetty</groupId>
+                        <artifactId>jetty</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>tomcat</groupId>
+                        <artifactId>jasper-compiler</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>tomcat</groupId>
+                        <artifactId>jasper-runtime</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>servlet-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.servlet.jsp</groupId>
+                        <artifactId>jsp-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-hadoop-store</artifactId>
+                <version>${spring-data-hadoop.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.xerial.snappy</groupId>
+                <artifactId>snappy-java</artifactId>
+                <version>${snappy-java.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
