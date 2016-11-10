@@ -3,6 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>hdfs-app-dependencies</artifactId>
+    <version>1.1.0.BUILD-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>hdfs-app-dependencies</name>
     <description>Spring Cloud Stream HDFS App Dependencies</description>
