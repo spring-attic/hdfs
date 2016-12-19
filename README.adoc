@@ -1,1 +1,9 @@
-# hdfs
+# HDFS and HDFS Dataset Sinks
+
+To learn more about this application and the supported properties, please review the following link.
+
+## HDFS
+include::spring-cloud-starter-stream-sink-hdfs/README.adoc[]
+
+## HDFS Dataset
+include::spring-cloud-starter-stream-sink-hdfs-dataset/README.adoc[]
