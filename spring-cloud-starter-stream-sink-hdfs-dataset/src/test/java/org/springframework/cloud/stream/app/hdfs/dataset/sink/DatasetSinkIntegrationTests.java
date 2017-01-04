@@ -16,8 +16,6 @@
 
 package org.springframework.cloud.stream.app.hdfs.dataset.sink;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -35,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.cloud.stream.annotation.Bindings;
@@ -47,6 +46,8 @@ import org.springframework.messaging.support.GenericMessage;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Thomas Risberg
@@ -86,7 +87,7 @@ public abstract class DatasetSinkIntegrationTests {
 		}
 	}
 
-	@WebIntegrationTest({"server.port:0",
+	@IntegrationTest({"server.port:0",
 			"spring.hadoop.fsUri=file:///",
 			"hdfs.dataset.directory=${java.io.tmpdir}/dataset",
 			"hdfs.dataset.namespace=test",

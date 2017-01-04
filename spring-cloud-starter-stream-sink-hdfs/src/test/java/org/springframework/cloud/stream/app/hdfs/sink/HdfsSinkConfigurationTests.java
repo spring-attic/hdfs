@@ -16,14 +16,23 @@
 
 package org.springframework.cloud.stream.app.hdfs.sink;
 
-import org.junit.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+
+import org.junit.After;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.cloud.stream.annotation.Bindings;
 import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -32,10 +41,6 @@ import org.springframework.messaging.support.GenericMessage;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -43,7 +48,7 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = HdfsSinkConfigurationTests.HdfsSinkApplication.class)
-@WebIntegrationTest({"server.port:0",
+@IntegrationTest({"server.port:0",
 		"spring.hadoop.fsUri=file:///",
 		"hdfs.directory=${java.io.tmpdir}/hdfs-sink",
 		"hdfs.closeTimeout=100"})
