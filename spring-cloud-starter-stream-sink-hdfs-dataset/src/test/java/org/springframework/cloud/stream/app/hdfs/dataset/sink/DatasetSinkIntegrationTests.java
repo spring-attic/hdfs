@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,27 +33,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.cloud.stream.annotation.Bindings;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.stream.app.hdfs.dataset.domain.TestPojo;
 import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.hadoop.fs.FsShell;
 import org.springframework.data.hadoop.store.dataset.DatasetOperations;
-import org.springframework.messaging.support.GenericMessage;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertTrue;
 
 /**
  * @author Thomas Risberg
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = DatasetSinkIntegrationTests.HdfsDatasetSinkApplication.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = {DatasetSinkIntegrationTests.HdfsDatasetSinkApplication.class, HdfsDatasetSinkConfiguration.class})
 @DirtiesContext
 public abstract class DatasetSinkIntegrationTests {
 
@@ -70,7 +67,6 @@ public abstract class DatasetSinkIntegrationTests {
 	protected DatasetOperations datasetOperations;
 
 	@Autowired
-	@Bindings(HdfsDatasetSinkConfiguration.class)
 	protected Sink sink;
 
 	@BeforeClass
@@ -87,44 +83,7 @@ public abstract class DatasetSinkIntegrationTests {
 		}
 	}
 
-	@IntegrationTest({"server.port:0",
-			"spring.hadoop.fsUri=file:///",
-			"hdfs.dataset.directory=${java.io.tmpdir}/dataset",
-			"hdfs.dataset.namespace=test",
-			"hdfs.dataset.batchSize=2",
-			"hdfs.dataset.idleTimeout=2000"})
-	public static class WritingDatasetTests extends DatasetSinkIntegrationTests {
-
-		@Test
-		public void testWritingSomething() throws IOException {
-			sink.input().send(new GenericMessage<>("Foo"));
-			sink.input().send(new GenericMessage<>("Bar"));
-			sink.input().send(new GenericMessage<>("Baz"));
-
-			applicationContext.close();
-			File testOutput = new File(testDir);
-			assertTrue("Dataset path created", testOutput.exists());
-			assertTrue("Dataset storage created",
-					new File(testDir + File.separator + datasetOperations.getDatasetName(String.class)).exists());
-			assertTrue("Dataset metadata created",
-					new File(testDir + File.separator + datasetOperations.getDatasetName(String.class) +
-							File.separator + ".metadata").exists());
-			File testDatasetFiles =
-					new File(testDir + File.separator + datasetOperations.getDatasetName(String.class));
-			File[] files = testDatasetFiles.listFiles(new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String name) {
-					if (name.endsWith(".avro")) {
-						return true;
-					}
-					return false;
-				}
-			});
-			assertTrue("Dataset data files created", files.length > 1);
-		}
-	}
-
-	@WebIntegrationTest({"server.port:0",
+	@TestPropertySource(properties = {"server.port:0",
 			"spring.hadoop.fsUri=file:///",
 			"hdfs.dataset.directory=${java.io.tmpdir}/dataset",
 			"hdfs.dataset.namespace=pojo",
@@ -177,7 +136,7 @@ public abstract class DatasetSinkIntegrationTests {
 		}
 	}
 
-	@WebIntegrationTest({"server.port:0",
+	@TestPropertySource(properties = {"server.port:0",
 			"spring.hadoop.fsUri=file:///",
 			"hdfs.dataset.directory=${java.io.tmpdir}/dataset",
 			"hdfs.dataset.namespace=parquet",

@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package org.springframework.cloud.stream.app.hdfs.sink;
+package org.springframework.cloud.stream.app.hdfs.dataset.sink;
+
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
-import org.junit.After;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -32,22 +35,25 @@ import org.springframework.boot.test.util.EnvironmentTestUtils;
 import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.hadoop.fs.FsShell;
+import org.springframework.data.hadoop.store.dataset.DatasetOperations;
 import org.springframework.messaging.support.GenericMessage;
-
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Thomas Risberg
  */
-public class HdfsSinkConfigurationTests {
+public class DatasetSinkContextClosingTests {
 
 	AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
-	private String testDir;
+	protected String testDir;
 
-	private FsShell fsShell;
+	protected String nameSpace;
 
-	private Sink sink;
+	protected String datasetName;
+
+	protected Configuration hadoopConfiguration;
+
+	protected Sink sink;
 
 	@BeforeClass
 	public static void setupClass() {
@@ -55,17 +61,24 @@ public class HdfsSinkConfigurationTests {
 	}
 
 	@Before
-	public void setup() {
-		this.testDir=System.getProperty("java.io.tmpdir") + "/hdfs-sink";
+	public void setup() throws IOException {
+		this.testDir=System.getProperty("java.io.tmpdir") + "/dataset";
+		this.nameSpace = "test";
+		System.out.println("**** TESTDIR: " + testDir + "/" + nameSpace);
 		String[] env = {"server.port:0",
 				"spring.hadoop.fsUri=file:///",
-				"hdfs.directory=" + this.testDir,
-				"hdfs.closeTimeout=100"};
+				"hdfs.dataset.directory=" + this.testDir,
+				"hdfs.dataset.namespace=" + this.nameSpace,
+				"hdfs.dataset.batchSize=2",
+				"hdfs.dataset.idleTimeout=2000"};
 		EnvironmentTestUtils.addEnvironment(this.context, env);
-		this.context.register(HdfsSinkApplication.class);
+		this.context.register(HdfsDatasetSinkApplication.class);
 		this.context.refresh();
-		this.fsShell = context.getBean(FsShell.class);
+		this.datasetName = context.getBean(DatasetOperations.class).getDatasetName(String.class);
+		this.hadoopConfiguration = context.getBean(Configuration.class);
 		this.sink = context.getBean(Sink.class);
+		FileSystem fs = FileSystem.get(hadoopConfiguration);
+		FsShell fsShell = new FsShell(hadoopConfiguration, fs);
 		if (fsShell.test(testDir)) {
 			fsShell.rmr(testDir);
 		}
@@ -74,33 +87,37 @@ public class HdfsSinkConfigurationTests {
 	@Test
 	public void testWritingSomething() throws IOException, InterruptedException {
 		sink.input().send(new GenericMessage<>("Foo"));
-		Thread.sleep(150);
 		sink.input().send(new GenericMessage<>("Bar"));
 		sink.input().send(new GenericMessage<>("Baz"));
-	}
 
-	@After
-	public void checkFilesClosedOK() throws IOException {
-		context.close();
+		this.context.close();
+
 		File testOutput = new File(testDir);
-		assertTrue(testOutput.exists());
-		File[] files = testOutput.listFiles(new FilenameFilter() {
-
+		assertTrue("Dataset path created", testOutput.exists());
+		assertTrue("Dataset storage created",
+				new File(testDir + File.separator + this.nameSpace + File.separator + datasetName).exists());
+		assertTrue("Dataset metadata created",
+				new File(testDir + File.separator + this.nameSpace + File.separator + datasetName +
+						File.separator + ".metadata").exists());
+		File testDatasetFiles =
+				new File(testDir + File.separator + this.nameSpace + File.separator + datasetName);
+		File[] files = testDatasetFiles.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
-				return name.endsWith(".txt");
+				if (name.endsWith(".avro")) {
+					return true;
+				}
+				return false;
 			}
-
 		});
-		assertTrue(files.length > 1);
+		assertTrue("Dataset data files created", files.length > 1);
 	}
 
 	@SpringBootApplication
-	static class HdfsSinkApplication {
+	static class HdfsDatasetSinkApplication {
 
 		public static void main(String[] args) {
-			SpringApplication.run(HdfsSinkApplication.class, args);
+			SpringApplication.run(HdfsDatasetSinkApplication.class, args);
 		}
 	}
-
 }

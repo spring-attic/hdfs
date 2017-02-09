@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,21 +29,14 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.cloud.stream.annotation.Bindings;
+import org.springframework.boot.test.util.EnvironmentTestUtils;
 import org.springframework.cloud.stream.messaging.Sink;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.hadoop.fs.FsShell;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;
@@ -52,25 +45,14 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Thomas Risberg
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = HdfsSinkIntegrationTests.HdfsSinkApplication.class)
-@IntegrationTest({"server.port:0",
-		"spring.hadoop.fsUri=file:///",
-		"hdfs.directory=${java.io.tmpdir}/hdfs-sink"})
-@DirtiesContext
 public class HdfsSinkIntegrationTests {
 
-	@Autowired
-	ConfigurableApplicationContext applicationContext;
+	AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
-	@Value("${hdfs.directory}")
 	private String testDir;
 
-	@Autowired
 	private FsShell fsShell;
 
-	@Autowired
-	@Bindings(HdfsSinkConfiguration.class)
 	private Sink sink;
 
 	@BeforeClass
@@ -80,6 +62,15 @@ public class HdfsSinkIntegrationTests {
 
 	@Before
 	public void setup() {
+		this.testDir=System.getProperty("java.io.tmpdir") + "/hdfs-sink";
+		String[] env = {"server.port:0",
+				"spring.hadoop.fsUri=file:///",
+				"hdfs.directory=" + this.testDir};
+		EnvironmentTestUtils.addEnvironment(this.context, env);
+		this.context.register(HdfsSinkConfigurationTests.HdfsSinkApplication.class);
+		this.context.refresh();
+		this.fsShell = context.getBean(FsShell.class);
+		this.sink = context.getBean(Sink.class);
 		if (fsShell.test(testDir)) {
 			fsShell.rmr(testDir);
 		}
@@ -94,7 +85,7 @@ public class HdfsSinkIntegrationTests {
 
 	@After
 	public void checkFilesClosedOK() throws IOException {
-		applicationContext.close();
+		context.close();
 		File testOutput = new File(testDir);
 		assertTrue(testOutput.exists());
 		File[] files = testOutput.listFiles(new FilenameFilter() {
