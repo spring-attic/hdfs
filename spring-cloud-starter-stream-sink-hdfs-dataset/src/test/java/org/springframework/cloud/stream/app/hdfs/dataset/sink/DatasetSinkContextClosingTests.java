@@ -64,7 +64,6 @@ public class DatasetSinkContextClosingTests {
 	public void setup() throws IOException {
 		this.testDir=System.getProperty("java.io.tmpdir") + "/dataset";
 		this.nameSpace = "test";
-		System.out.println("**** TESTDIR: " + testDir + "/" + nameSpace);
 		String[] env = {"server.port:0",
 				"spring.hadoop.fsUri=file:///",
 				"hdfs.dataset.directory=" + this.testDir,
