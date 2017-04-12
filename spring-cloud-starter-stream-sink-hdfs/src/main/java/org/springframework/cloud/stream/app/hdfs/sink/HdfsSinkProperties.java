@@ -18,6 +18,7 @@ package org.springframework.cloud.stream.app.hdfs.sink;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Pattern;
 
@@ -28,6 +29,7 @@ import javax.validation.constraints.Pattern;
  */
 @SuppressWarnings("unused")
 @ConfigurationProperties("hdfs")
+@Validated
 public class HdfsSinkProperties {
 
 	/**
