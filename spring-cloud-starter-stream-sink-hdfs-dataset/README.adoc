@@ -3,6 +3,20 @@
 
 This module writes each message it receives to HDFS as part of a Kite SDK Dataset.
 
+== Input
+
+=== Headers
+
+* `content-type: application/x-java-serialized-object`
+
+=== Payload
+
+* `java.io.Serializable`
+
+== Output
+
+N/A
+
 == Options
 
 The **$$hdfs-dataset$$** $$sink$$ has the following options:
@@ -23,9 +37,21 @@ $$hdfs.dataset.writer-cache-size$$:: $$The size of the cache to be used for part
 NOTE: This module can have it's runtime dependencies provided during startup if you would like to use a Hadoop distribution other than the default one.
 
 //end::ref-doc[]
-
 == Build
 
 ```
-$ mvn clean package
+$ ./mvnw clean install -PgenerateApps
+$ cd apps
 ```
+You can find the corresponding binder based projects here.
+You can then cd into one of the folders and build it:
+```
+$ ./mvnw clean package
+```
+
+== Examples
+
+```
+java -jar hdfs-dataset-sink.jar
+```
+
