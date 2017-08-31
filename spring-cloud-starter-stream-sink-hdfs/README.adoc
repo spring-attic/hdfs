@@ -40,8 +40,6 @@ $$hdfs.rollover$$:: $$Threshold in bytes when file will be automatically rolled 
 
 NOTE: This module can have it's runtime dependencies provided during startup if you would like to use a Hadoop distribution other than the default one.
 
-//end::ref-doc[]
-
 == Build
 
 ```
@@ -59,3 +57,6 @@ $ ./mvnw clean package
 ```
 java -jar hdfs-sink.jar --fsUri
 ```
+
+//end::ref-doc[]
+
