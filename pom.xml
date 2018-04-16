@@ -13,6 +13,7 @@
 	</parent>
 
 	<modules>
+		<module>spring-cloud-starter-stream-hdfs</module>
 		<module>spring-cloud-starter-stream-sink-hdfs</module>
 		<module>spring-cloud-starter-stream-sink-hdfs-dataset</module>
 		<module>hdfs-app-dependencies</module>
@@ -29,7 +30,8 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-<profiles>
+
+	<profiles>
 		<profile>
 			<id>spring</id>
 			<repositories>

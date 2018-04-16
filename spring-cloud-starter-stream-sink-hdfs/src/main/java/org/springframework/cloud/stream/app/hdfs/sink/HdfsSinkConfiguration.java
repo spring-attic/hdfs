@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,10 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.app.hdfs.hadoop.store.DataStoreWriter;
 import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.data.hadoop.store.DataStoreWriter;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -45,15 +44,17 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 @EnableConfigurationProperties(HdfsSinkProperties.class)
 public class HdfsSinkConfiguration {
 
+	public static final String TASK_SCHEDULER_BEAN = "hdfsSinkTaskScheduler";
+	public static final String TASK_EXECUTOR_BEAN = "TASK_EXECUTOR_BEAN";
+
 	private DataStoreWriter<String> dataStoreWriter;
 
-	@Bean
+	@Bean(TASK_SCHEDULER_BEAN)
 	public TaskScheduler taskScheduler() {
 		return new ThreadPoolTaskScheduler();
 	}
 
-	@Bean
-	@Primary
+	@Bean(TASK_EXECUTOR_BEAN)
 	public TaskExecutor taskExecutor() {
 		return new ThreadPoolTaskExecutor();
 	}

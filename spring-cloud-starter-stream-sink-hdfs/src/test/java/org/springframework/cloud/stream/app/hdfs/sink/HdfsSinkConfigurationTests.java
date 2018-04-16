@@ -29,9 +29,9 @@ import org.junit.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.util.EnvironmentTestUtils;
+import org.springframework.cloud.stream.app.hdfs.hadoop.fs.FsShell;
 import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.data.hadoop.fs.FsShell;
 import org.springframework.messaging.support.GenericMessage;
 
 import static org.junit.Assert.assertTrue;

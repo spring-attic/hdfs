@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,18 +26,19 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cloud.stream.app.hdfs.hadoop.store.DataStoreWriter;
+import org.springframework.cloud.stream.app.hdfs.hadoop.store.codec.CodecInfo;
+import org.springframework.cloud.stream.app.hdfs.hadoop.store.codec.Codecs;
+import org.springframework.cloud.stream.app.hdfs.hadoop.store.output.PartitionTextFileWriter;
+import org.springframework.cloud.stream.app.hdfs.hadoop.store.output.TextFileWriter;
+import org.springframework.cloud.stream.app.hdfs.hadoop.store.partition.MessagePartitionStrategy;
+import org.springframework.cloud.stream.app.hdfs.hadoop.store.strategy.naming.*;
+import org.springframework.cloud.stream.app.hdfs.hadoop.store.strategy.rollover.RolloverStrategy;
+import org.springframework.cloud.stream.app.hdfs.hadoop.store.strategy.rollover.SizeRolloverStrategy;
 import org.springframework.context.Lifecycle;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.data.hadoop.store.DataStoreWriter;
-import org.springframework.data.hadoop.store.codec.CodecInfo;
-import org.springframework.data.hadoop.store.codec.Codecs;
-import org.springframework.data.hadoop.store.output.PartitionTextFileWriter;
-import org.springframework.data.hadoop.store.output.TextFileWriter;
-import org.springframework.data.hadoop.store.partition.MessagePartitionStrategy;
-import org.springframework.data.hadoop.store.strategy.naming.*;
-import org.springframework.data.hadoop.store.strategy.rollover.RolloverStrategy;
-import org.springframework.data.hadoop.store.strategy.rollover.SizeRolloverStrategy;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.integration.context.IntegrationContextUtils;
@@ -205,12 +206,12 @@ public class DataStoreWriterFactoryBean implements InitializingBean, DisposableB
 	}
 
 	@Autowired
-	public void setTaskScheduler(TaskScheduler taskScheduler) {
+	public void setTaskScheduler(@Qualifier(HdfsSinkConfiguration.TASK_SCHEDULER_BEAN) TaskScheduler taskScheduler) {
 		this.taskScheduler = taskScheduler;
 	}
 
 	@Autowired
-	public void setTaskExecutor(TaskExecutor taskExecutor) {
+	public void setTaskExecutor(@Qualifier(HdfsSinkConfiguration.TASK_EXECUTOR_BEAN) TaskExecutor taskExecutor) {
 		this.taskExecutor = taskExecutor;
 	}
 
