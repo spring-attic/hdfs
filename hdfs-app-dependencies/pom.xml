@@ -18,7 +18,6 @@
 
 	<properties>
 		<apache-hadoop.version>2.7.3</apache-hadoop.version>
-		<kite.version>1.0.0</kite.version>
 		<snappy-java.version>1.1.2</snappy-java.version>
 		<log4j-over-slf4j.version>1.7.25</log4j-over-slf4j.version>
 	</properties>
@@ -56,11 +55,6 @@
 				<version>${snappy-java.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.kitesdk</groupId>
-				<artifactId>kite-data-core</artifactId>
-				<version>${kite.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>log4j-over-slf4j</artifactId>
 				<version>${log4j-over-slf4j.version}</version>
@@ -73,11 +67,6 @@
 			<dependency>
 				<groupId>org.springframework.cloud.stream.app</groupId>
 				<artifactId>spring-cloud-starter-stream-sink-hdfs</artifactId>
-				<version>2.0.0.BUILD-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.cloud.stream.app</groupId>
-				<artifactId>spring-cloud-starter-stream-sink-hdfs-dataset</artifactId>
 				<version>2.0.0.BUILD-SNAPSHOT</version>
 			</dependency>
 		</dependencies>
