@@ -26,6 +26,7 @@ import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -70,9 +71,9 @@ public class HdfsSinkConfiguration {
 	}
 
 	@ServiceActivator(inputChannel=Sink.INPUT)
-	public void hdfsSink(Object payload) {
+	public void hdfsSink(@Payload String payload) {
 		try {
-			dataStoreWriter.write(payload.toString());
+			dataStoreWriter.write(payload);
 		} catch (IOException e) {
 			throw new IllegalStateException("Error while writing", e);
 		}
