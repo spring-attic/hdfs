@@ -32,7 +32,7 @@ import org.junit.Test;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.util.EnvironmentTestUtils;
+import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.cloud.stream.app.hdfs.hadoop.fs.FsShell;
 import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -63,10 +63,10 @@ public class HdfsSinkIntegrationTests {
 	@Before
 	public void setup() {
 		this.testDir=System.getProperty("java.io.tmpdir") + "/hdfs-sink";
-		String[] env = {"server.port:0",
+		String[] env = {"server.port=0",
 				"spring.hadoop.fsUri=file:///",
 				"hdfs.directory=" + this.testDir};
-		EnvironmentTestUtils.addEnvironment(this.context, env);
+		TestPropertyValues.of(env).applyTo(context);
 		this.context.register(HdfsSinkConfigurationTests.HdfsSinkApplication.class);
 		this.context.refresh();
 		this.fsShell = context.getBean(FsShell.class);

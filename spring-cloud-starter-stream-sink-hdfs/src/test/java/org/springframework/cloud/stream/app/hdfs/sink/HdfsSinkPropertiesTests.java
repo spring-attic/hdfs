@@ -17,7 +17,7 @@ package org.springframework.cloud.stream.app.hdfs.sink;
 
 import org.junit.Test;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.util.EnvironmentTestUtils;
+import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.cloud.stream.app.hdfs.hadoop.store.codec.Codecs;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +33,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void fsUriCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.fsUri:hdfs://localhost:8020");
+		TestPropertyValues.of("hdfs.fsUri=hdfs://localhost:8020").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
@@ -43,7 +43,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void directoryCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.directory:/tmp/test");
+		TestPropertyValues.of("hdfs.directory=/tmp/test").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
@@ -53,7 +53,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void fileNameCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.fileName:mydata");
+		TestPropertyValues.of("hdfs.fileName=mydata").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
@@ -63,7 +63,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void fileExtensionCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.fileExtension:test");
+		TestPropertyValues.of("hdfs.fileExtension=test").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
@@ -73,7 +73,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void codecCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.codec:snappy");
+		TestPropertyValues.of("hdfs.codec=snappy").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
@@ -83,7 +83,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void fileUuidCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.fileUuid:true");
+		TestPropertyValues.of("hdfs.fileUuid=true").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
@@ -93,7 +93,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void overwriteCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.overwrite:true");
+		TestPropertyValues.of("hdfs.overwrite=true").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
@@ -103,7 +103,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void rolloverCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.rollover:5555555");
+		TestPropertyValues.of("hdfs.rollover=5555555").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
@@ -113,7 +113,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void idleTimeoutCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.idleTimeout:12345");
+		TestPropertyValues.of("hdfs.idleTimeout=12345").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
@@ -123,7 +123,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void closeTimeoutCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.closeTimeout:12345");
+		TestPropertyValues.of("hdfs.closeTimeout=12345").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
@@ -133,7 +133,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void enableSyncCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.enableSync:true");
+		TestPropertyValues.of("hdfs.enableSync=true").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
@@ -143,7 +143,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void flushTimeoutCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.flushTimeout:12345");
+		TestPropertyValues.of("hdfs.flushTimeout=12345").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
@@ -153,7 +153,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void inUsePrefixCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.inUsePrefix:_");
+		TestPropertyValues.of("hdfs.inUsePrefix=_").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
@@ -163,7 +163,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void inUseSuffixCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.inUseSuffix:tmp");
+		TestPropertyValues.of("hdfs.inUseSuffix=tmp").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
@@ -173,7 +173,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void fileOpenAttemptsCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.fileOpenAttempts:5");
+		TestPropertyValues.of("hdfs.fileOpenAttempts=5").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
@@ -183,7 +183,7 @@ public class HdfsSinkPropertiesTests {
 	@Test
 	public void partitionPathCanBeCustomized() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(context, "hdfs.partitionPath:dateFormat('yyyy/MM/dd')");
+		TestPropertyValues.of("hdfs.partitionPath=dateFormat('yyyy/MM/dd')").applyTo(context);
 		context.register(Conf.class);
 		context.refresh();
 		HdfsSinkProperties properties = context.getBean(HdfsSinkProperties.class);
